@@ -1,5 +1,5 @@
 void printer(){
-  Serial.print("Vm: ");           //Vm = Voltage monitor status
+  /*Serial.print("Vm: ");           //Vm = Voltage monitor status
   Serial.print(spanning_status);
 
 
@@ -17,5 +17,5 @@ void printer(){
 
   
   Serial.println();
-  
+  */
 }

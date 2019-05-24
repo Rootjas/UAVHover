@@ -1,20 +1,11 @@
 #include "MPU9250.h"
 #include "math.h"
 
-MPU9250 IMU(Wire,0x68);
-int status;
-double Yaw, pitch, roll, Xg, Yg, Zg, dt, Zr, Zr_copy;
-const float alpha = 0.5;
-double current_time = millis();
-double fXg = 0;
-double fYg = 0;
-double fZg = 0;
-double gZr = 0;
-float Zr_total = 0;
-double Zr_count = 0;
-double Theta, X_versnelling, Y_versnelling, Omega;
+
 
 void IMU_setup(){
+
+
   // start communication with IMU 
   status = IMU.begin();
   status = IMU.calibrateGyro();
@@ -47,7 +38,26 @@ double Yaw_Berekening(double Gyro_z, double dt){
   return Yaw;
 }
 
-void IMU_read() {
+double Alpha_Berekening(double Gyro_z, double dt){
+
+  Alpha = ((Yaw + Gyro_z) / dt * 180)/M_PI;
+  return Alpha;
+}
+
+double Snelheid_Berekening(double Versnelling, double dt){
+  
+  Snelheid = Snelheid + Versnelling * dt;
+  return Snelheid;
+}
+
+double Plaats_Berekening(double Snelheid, double dt){
+  
+  Plaats = Plaats + Snelheid * dt;
+  return Plaats;
+  
+}
+
+void IMU_read(double &Yaw, double &gZr, double &Theta_versnelling, double &fXg, double &fYg, double &Snelheid_X, double &Snelheid_Y, double &Plaats_X, double &Plaats_Y) {
   // read the sensor
   IMU.readSensor();
   Xg = IMU.getAccelX_mss();
@@ -65,7 +75,7 @@ void IMU_read() {
   gZr = Zr * alpha + (gZr * (1.0 - alpha));
 
   
-  Serial.print("Xg"); Serial.print(Xg);
+  Serial.print("\t\tXg"); Serial.print(Xg);
   //Serial.print(timeStep,3);
   Serial.print("\t\t");
   Serial.print("Yg"); Serial.print(Yg);
@@ -73,7 +83,7 @@ void IMU_read() {
 
   // Print gyro values in rad/sec
   Serial.print("Zr"); Serial.print(IMU.getGyroZ_rads(),5);
-  Serial.print("\t\t");
+  Serial.println("\t\t");
 
   // Print mag values in degree/sec
   //Serial.print("X-m: "); Serial.print(IMU.getMagX_uT(),2);
@@ -84,4 +94,11 @@ void IMU_read() {
   //Serial.print("\t\t");
 
   Yaw = Yaw_Berekening(gZr, dt);
+  Theta_versnelling = Alpha_Berekening(gZr, dt);
+
+  Snelheid_X = Snelheid_Berekening(fXg, dt);
+  Plaats_X = Plaats_Berekening(Snelheid_X, dt);
+  Snelheid_Y = Snelheid_Berekening(fYg, dt);
+  Plaats_Y = Plaats_Berekening(Snelheid_Y, dt);
+  
 }
