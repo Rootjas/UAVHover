@@ -41,7 +41,6 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
   t_oud = t_nw;
   // Wacht tot de cyclustijd bereikt is:
   while (t_nw - t_oud < cyclustijd) t_nw = millis();
@@ -50,7 +49,10 @@ void loop() {
   
 
   // Hier komt een stukje code te staan die de stroomwaarden en spanningswaarden van de lipo accu uitleest en eventueel terugkoppelt aan de hmi?
-
+  int spanning_status = cel_monitor(spanning_status);
+  Serial.print("\t\tVm: ");
+  Serial.print(spanning_status);
+  Serial.println();
 
   
   // Informatie ophalen van pi, 1x keer in de zoveel seconden. Vanuit twee punten op het plafond kan een locatie(coordinaat) en een orientatie (de hoek tov de x-as) worden berekend(picam).
