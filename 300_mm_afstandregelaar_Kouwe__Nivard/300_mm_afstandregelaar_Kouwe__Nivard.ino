@@ -16,7 +16,7 @@
 const float Kp = 1., Kd = 1.; // Regelaarparameters
 /****************************************************************************/
 float s;
-const float sp = 0.300;       // setpoint = 30 cm
+const float sp = 30;       // setpoint = 30 cm
 
 float error, error_oud, d_error;
 const float m = 1;      // kg
@@ -33,7 +33,7 @@ const int motor1Rpen = 6;
 const int motor2Lpen = 3;
 const int motor2Rpen = 9;
 /****************************************************************************/
-float pwmLv, pwmLa,pwmRa,pwmRv;
+float pwmLv, pwmLa, pwmRa, pwmRv;
 
 bool richting;
 
@@ -83,7 +83,7 @@ void loop() {
 
   // Regelaar
   error_oud = error;
-  error = sp - s;
+  error = sp - s;             //komt er uit 
   d_error = error - error_oud;
   F = error * Kp + d_error / dt * Kd;
 
