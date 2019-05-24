@@ -1,3 +1,25 @@
+#include "MPU9250.h"
+#include "math.h"
+MPU9250 IMU(Wire,0x68);
+int status;
+double Yaw, pitch, roll; 
+double Xg, Yg, Zg, dt, Zr;
+const float alpha = 0.5;
+double current_time = millis();
+double fZg = 0;
+double gZr = 0;
+float Zr_total = 0;
+double Zr_count = 0;
+
+double Theta, Theta_versnelling, X_versnelling, Y_versnelling;
+double Alpha;
+double fXg = 0;
+double fYg = 0;
+double Plaats = 0;
+double Snelheid = 0;
+
+double A_x, A_y, V_x, V_y, X_x, X_y;
+
 // Instellingen
 
 //Regelaarparameters roterend
@@ -33,7 +55,6 @@ int r = 1;
 void setup() {
   Serial.begin(9600);
   // put your setup code here, to run once:
-  // sensoren eiken (imu)
   //-----------------------------IMU----------------------//
   IMU_setup();
   // vanuit pi orientatie, positie en totale lengte (baan) tot volgende punt verkrijgen. (later nog een aantal keer uitvoeren zodat sensoren geeikt blijven)  HOEKEN in Radialen, AFSTANDEN in centimeters

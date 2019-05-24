@@ -10,12 +10,24 @@ void loop() {
   int spanning_status = cel_monitor(spanning_status);
   
   //------------------IMU----------------------//
-  IMU_read();
-  Theta = Yaw;
-  Omega = Zr;
-  X_versnelling = Xg;
-  Y_versnelling = Yg;
+  double Theta, Alpha, A_x, A_y, Omega, V_x, V_y, X_x, X_y;
+  IMU_read(Theta, Omega, Alpha, A_x, A_y, V_x, V_y, X_x, X_y);
 
+  /*
+  double Theta = Yaw;
+  double Omega = gZr;
+  double Alpha = Theta_versnelling;
+
+  A_x = fXg;
+  A_y = fYg;
+  V_x = Snelheid_X;
+  V_y = Snelheid_Y;
+  X_x = Plaats_X;
+  Y_x = Plaats_Y;
+  */
+  
+  
+  /*
   // Informatie ophalen van pi, 1x keer in de zoveel seconden. Vanuit twee punten op het plafond kan een locatie(coordinaat) en een orientatie (de hoek tov de x-as) worden berekend(picam).
   if (Serial.available()){
     r = r * (Serial.read() - '0');
@@ -25,14 +37,6 @@ void loop() {
   // Hier komt een stukje code van de afstandssensoren en hun regelaar(bij het detecteren van object binnen 0,3 cm ga de andere kant op accelereren/ kom tot stilstand)
 
 
-
-
-
-
-  // dead reckoning berekening om tussendoor de stand of hoek te bepalen
-  alfa =                        // lees de hoekversnellingssensor (IMU) om de z -as uit: i2c
-  ohmega = ohmega + alfa * dt   // Hoeknselheid = oude hoeksnelheid + snelheidsverschil ten gevolgen van hoekversnelling
-  theta = theta + ohmega * dt   // Stand of hoek = oude hoek + hoek ten gevolge van hoeksnelheid
 
   // regelsysteem input is de hoek of stand {radialen], dit vergelijk je met het setpoint gewenste hoek = 0[radialen]. Output is moment Mclipped
   herror_oud = herror;
@@ -49,10 +53,6 @@ void loop() {
 
 
  
-  // dead reckoning berekening om tussendoor positie te bepalen tot het eindpunt is verkregen.
-  a =                           // lees de versnellingssensor (IMU) van de y-as uit: i2c
-  v = v + a * dt;               // nieuwe snelheid = oude snelheid + snelheidsverschil ten gevolgen van versnelling of vertraging
-  s = s + v * dt;               // nieuwe afgelegde weg = oude afgelegde weg + afgelegde weg (snelheid aangehouden binnen bepaald tijdsbestek)
 
   // hier moet een stukje code komen te staan die s gelijk trekt met picam (kalibratie)
   // bijv: na 5 keer het bepalen van s met behulp van het uitlezen van imu, bepalen we 1x s met de picam.
@@ -67,5 +67,8 @@ void loop() {
   
   // omrekenen van kracht naar pwm signaal voor beide motoren, we gaan hiervan uit dat orientatie al voldoende is.
 
+
+  //------------------USED FOR DEBUGGING-------------//
   printer();
+  */
 }
