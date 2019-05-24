@@ -1,14 +1,21 @@
 void loop() {
+
+  //---------------------dt--------------------//
   double dt = tijdstap();
   
 
   // Hier komt een stukje code te staan die de stroomwaarden en spanningswaarden van de lipo accu uitleest en eventueel terugkoppelt aan de hmi?
-  int spanning_status = cel_monitor(spanning_status);
-  Serial.print("\t\tVm: ");
-  Serial.print(spanning_status);
-  Serial.println();
-
   
+  //------------------Cel_monitor--------------//
+  int spanning_status = cel_monitor(spanning_status);
+  
+  //------------------IMU----------------------//
+  IMU_read();
+  Theta = Yaw;
+  Omega = Zr;
+  X_versnelling = Xg;
+  Y_versnelling = Yg;
+
   // Informatie ophalen van pi, 1x keer in de zoveel seconden. Vanuit twee punten op het plafond kan een locatie(coordinaat) en een orientatie (de hoek tov de x-as) worden berekend(picam).
   if (Serial.available()){
     r = r * (Serial.read() - '0');
@@ -59,4 +66,6 @@ void loop() {
   Fclipped = max(min(F, Fmax),-Fmax);         // -Fmax < F < +Fmax kracht wordt begrenst om stabiliteit ten goede te komen
   
   // omrekenen van kracht naar pwm signaal voor beide motoren, we gaan hiervan uit dat orientatie al voldoende is.
+
+  printer();
 }

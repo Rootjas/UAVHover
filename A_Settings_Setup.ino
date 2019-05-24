@@ -16,21 +16,25 @@ const float m = 0.500;                         // kg
 const float Fmax = 0.100;                      // N
 float F, Fclipped, a, M, Mclipped, alfa;       // clippen = F begrenzen tussen -Fmax en +Fmax
 
-long t_nw = millis();
-long t_oud;
-float dt;
-const long cyclustijd = 50;                    // ms
-
 int x_as = 0;
 const int x_max = 500;                         // aantal integratiestappen
 
 //instellingen tbv serial read
-int r =1;
+int r = 1;
+
+
+//--------------------------------------IMU SETTINGs--------------------------------------------------//
+  float axb = 0.14; // accel bias
+  float axs = 1; // accel scale factor
+  float ayb = 0.28; // accel bias
+  float ays = 1; // accel scale factor
+//----------------------------------------------------------------------------------------------------//
 
 void setup() {
   Serial.begin(9600);
   // put your setup code here, to run once:
   // sensoren eiken (imu)
-  // imu opstart kalibratie, geen verandering in locatie van picam betekend, versnelling ay van imu moet 0 zijn.
+  //-----------------------------IMU----------------------//
+  IMU_setup();
   // vanuit pi orientatie, positie en totale lengte (baan) tot volgende punt verkrijgen. (later nog een aantal keer uitvoeren zodat sensoren geeikt blijven)  HOEKEN in Radialen, AFSTANDEN in centimeters
 }
