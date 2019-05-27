@@ -25,6 +25,12 @@ const float m = 1;      // kg
 /****************************************************************************/
 const int usTrigPen =  5;
 const int usEchoPen =  6;
+const int Trigpin1 = 12;
+const int Echopin1 = 13;
+const int Trigpin2 = 10;
+const int Echopin2 = 11;
+const int Trigpin3 = 8;
+const int Echopin3 = 4;
 //Define pins ultrasonic(trig,echo)
 Ultrasonic ultrasonic(usTrigPen, usEchoPen);
 
