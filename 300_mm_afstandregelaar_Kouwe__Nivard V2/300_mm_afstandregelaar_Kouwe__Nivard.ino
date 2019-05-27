@@ -16,15 +16,21 @@
 const float Kp = 1., Kd = 1.; // Regelaarparameters
 /****************************************************************************/
 float s;
-const float sp = 0.300;       // setpoint = 30 cm
+const float sp = 0.3;       // setpoint = 30 cm
 
 float error, error_oud, d_error;
 const float m = 1;      // kg
 
 
 /****************************************************************************/
-const int usTrigPen = 8;
-const int usEchoPen = 4;
+const int usTrigPen = 12;
+const int usEchoPen = 13;
+const int usTrigPen = 10;
+const int usEchoPen = 11;
+const int usTrigPen = 4;
+const int usEchoPen = 8;
+
+
 //Define pins ultrasonic(trig,echo)
 Ultrasonic ultrasonic(usTrigPen, usEchoPen);
 
@@ -78,7 +84,7 @@ void loop() {
 
   s = ultrasonic.Ranging(CM); //Use 'CM' for centimeters or 'INC' for inches
   Serial.println(s);
-/*
+
   // Regelaar
   error_oud = error;
   error = sp - s;
@@ -101,6 +107,10 @@ void loop() {
       pwmRv = 0;
       richting = false;
   }
+  serial.print("linker motor vooruit",pwmLv);
+  serial.print("rechter motor vooruit",pwmRv);
+  serial.print("linker motor achteruit",pwmLa);
+  serial.print("rechter motor achteruit",pwmRa);
   analogWrite(motor1Lpen, pwmLv);
   analogWrite(motor2Lpen, pwmLa);
   analogWrite(motor1Rpen, pwmRv);
