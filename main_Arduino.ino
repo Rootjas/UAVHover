@@ -1,3 +1,4 @@
+
 void loop() {
 
   //---------------------dt--------------------//
@@ -12,6 +13,9 @@ void loop() {
   //------------------IMU----------------------//
   double Theta, Alpha, A_x, A_y, Omega, V_x, V_y, X_x, X_y;
   IMU_read(Theta, Omega, Alpha, A_x, A_y, V_x, V_y, X_x, X_y);
+
+  int PWMLv, PWMLa, PWMRv, PWMRa;
+  mm300_regelaar(dt, PWMLv, PWMLa, PWMRv, PWMRa);
 
   /*
   double Theta = Yaw;

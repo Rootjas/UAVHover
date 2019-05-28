@@ -1,10 +1,7 @@
 #include "MPU9250.h"
 #include "math.h"
 
-
-
 void IMU_setup(){
-
 
   // start communication with IMU 
   status = IMU.begin();
@@ -40,7 +37,7 @@ double Yaw_Berekening(double Gyro_z, double dt){
 
 double Alpha_Berekening(double Gyro_z, double dt){
 
-  Alpha = ((Yaw + Gyro_z) / dt * 180)/M_PI;
+  double Alpha = ((Yaw + Gyro_z) / dt * 180)/M_PI;
   return Alpha;
 }
 
@@ -58,7 +55,7 @@ double Plaats_Berekening(double Snelheid, double dt){
 }
 
 void IMU_read(double &Yaw, double &gZr, double &Theta_versnelling, double &fXg, double &fYg, double &Snelheid_X, double &Snelheid_Y, double &Plaats_X, double &Plaats_Y) {
-  // read the sensor
+
   IMU.readSensor();
   Xg = IMU.getAccelX_mss();
   Yg = IMU.getAccelY_mss();
@@ -83,7 +80,7 @@ void IMU_read(double &Yaw, double &gZr, double &Theta_versnelling, double &fXg, 
 
   // Print gyro values in rad/sec
   Serial.print("Zr"); Serial.print(IMU.getGyroZ_rads(),5);
-  Serial.println("\t\t");
+  Serial.print("\t\t");
 
   // Print mag values in degree/sec
   //Serial.print("X-m: "); Serial.print(IMU.getMagX_uT(),2);
@@ -94,6 +91,8 @@ void IMU_read(double &Yaw, double &gZr, double &Theta_versnelling, double &fXg, 
   //Serial.print("\t\t");
 
   Yaw = Yaw_Berekening(gZr, dt);
+  Serial.print("Yw"); Serial.print(Yaw);
+  Serial.println("\t\t");
   Theta_versnelling = Alpha_Berekening(gZr, dt);
 
   Snelheid_X = Snelheid_Berekening(fXg, dt);
