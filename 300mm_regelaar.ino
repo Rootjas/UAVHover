@@ -1,5 +1,3 @@
-#include "Ultrasonic.h"       // HC-SR04
-
 const float Kp = 0.01, Ki = 0., Kd = 1.; // Regelaarparameters
 const float sp = 30;       // setpoint = 30 cm
 
