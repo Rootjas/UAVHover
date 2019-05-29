@@ -1,6 +1,5 @@
 #include "MPU9250.h"
 #include "math.h"
-#include "Ultrasonic.h"
 
 MPU9250 IMU(Wire,0x68);
 int status;
