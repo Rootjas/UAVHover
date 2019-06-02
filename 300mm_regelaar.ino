@@ -69,6 +69,7 @@ int Ultrasone(int Trig_pin, int Echo_pin){
 void mm300_regelaar(float dt, int &PWMLv, int &PWMLa, int &PWMRv, int &PWMRa){
 
   float s = Ultrasone(usTrigPen,usEchoPen);
+  float C = 0.01
   
   //P-regelaar
   error = sp - s;
@@ -79,7 +80,13 @@ void mm300_regelaar(float dt, int &PWMLv, int &PWMLa, int &PWMRv, int &PWMRa){
   F = error * Kp + I_error * Ki + D_error * Kd;
 
   error_oud = error;
-
+/*
+  float Fv = C / error;
+  if(error > 0 ){
+    float Ftot = F - Fv;
+    if(Ftot < 0) Ftot = -Ftot;
+  }
+*/
   Fclipped = max(min(F, Fmax), Fmin); // Fmin < F < +Fmax
 
   // Omrekening Fclipped naar pwm-signaal

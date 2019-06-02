@@ -71,15 +71,15 @@ void IMU_read(double &Yaw, double &gZr, double &Theta_versnelling, double &fXg, 
   fZg = Zg * alpha + (fZg * (1.0 - alpha));
   gZr = Zr * alpha + (gZr * (1.0 - alpha));
 
-  
+  /*
   Serial.print("\t\tXg"); Serial.print(Xg);
   //Serial.print(timeStep,3);
   Serial.print("\t\t");
   Serial.print("Yg"); Serial.print(Yg);
   Serial.print("\t\t");
-
+*/
   // Print gyro values in rad/sec
-  Serial.print("Zr"); Serial.print(IMU.getGyroZ_rads(),5);
+  //Serial.print("Zr"); Serial.print(IMU.getGyroZ_rads(),5);
   Serial.print("\t\t");
 
   // Print mag values in degree/sec
@@ -91,7 +91,7 @@ void IMU_read(double &Yaw, double &gZr, double &Theta_versnelling, double &fXg, 
   //Serial.print("\t\t");
 
   Yaw = Yaw_Berekening(gZr, dt);
-  Serial.print("Yw"); Serial.print(Yaw);
+  //Serial.print("Yw"); Serial.print(Yaw);
   Serial.println("\t\t");
   Theta_versnelling = Alpha_Berekening(gZr, dt);
 

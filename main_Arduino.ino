@@ -8,27 +8,20 @@ void loop() {
   // Hier komt een stukje code te staan die de stroomwaarden en spanningswaarden van de lipo accu uitleest en eventueel terugkoppelt aan de hmi?
   
   //------------------Cel_monitor--------------//
+  
   int spanning_status = cel_monitor(spanning_status);
+
+  //------------------Stroom_meter-------------//
+
+  int stroom_status = stroom_monitor(stroom_status);
   
   //------------------IMU----------------------//
   double Theta, Alpha, A_x, A_y, Omega, V_x, V_y, X_x, X_y;
   IMU_read(Theta, Omega, Alpha, A_x, A_y, V_x, V_y, X_x, X_y);
 
+
   int PWMLv, PWMLa, PWMRv, PWMRa;
   mm300_regelaar(dt, PWMLv, PWMLa, PWMRv, PWMRa);
-
-  /*
-  double Theta = Yaw;
-  double Omega = gZr;
-  double Alpha = Theta_versnelling;
-
-  A_x = fXg;
-  A_y = fYg;
-  V_x = Snelheid_X;
-  V_y = Snelheid_Y;
-  X_x = Plaats_X;
-  Y_x = Plaats_Y;
-  */
   
   
   /*
