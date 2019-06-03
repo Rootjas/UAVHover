@@ -3,7 +3,7 @@ int stroom_teller;
 int stroom_monitor(int stroom_status){
     //stroom_status : 0 = OK, 1 = NIET OK 
 
-  float stroom_waarde = analogRead(A4) * (5.0 / 1023.0);
+  float stroom_waarde = analogRead(A3) * (5.0 / 1023.0);
 
   Serial.print("\t\tsw");
   Serial.print(stroom_waarde, 2);
