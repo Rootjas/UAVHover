@@ -9,7 +9,7 @@ int stroom_monitor(int stroom_status){
   Serial.print(stroom_waarde, 2);
 
   
-  if((stroom_waarde > 0.7 && stroom_status == 0){
+  if(stroom_waarde > 0.7 && stroom_status == 0){
     stroom_teller++;
   }
   else{

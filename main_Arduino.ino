@@ -3,17 +3,20 @@ void loop() {
 
   //---------------------dt--------------------//
   double dt = tijdstap();
-  
+  digitalWrite(7,OUTPUT);
 
   // Hier komt een stukje code te staan die de stroomwaarden en spanningswaarden van de lipo accu uitleest en eventueel terugkoppelt aan de hmi?
   
   //------------------Cel_monitor--------------//
-  
+
   int spanning_status = cel_monitor(spanning_status);
 
   //------------------Stroom_meter-------------//
 
   int stroom_status = stroom_monitor(stroom_status);
+
+  //if(spanning_status == 1 || stroom_status == 1)digitalWrite(7,LOW);
+  //else digitalWrite(7,HIGH);
   
   //------------------IMU----------------------//
   double Theta, Alpha, A_x, A_y, Omega, V_x, V_y, X_x, X_y;
@@ -23,7 +26,10 @@ void loop() {
   int PWMLv, PWMLa, PWMRv, PWMRa;
   mm300_regelaar(dt, PWMLv, PWMLa, PWMRv, PWMRa);
   
-  
+  analogWrite(3,PWMLv);
+  analogWrite(9,PWMLa);
+  analogWrite(5,PWMRa);  
+  analogWrite(6,PWMRv);
   /*
   // Informatie ophalen van pi, 1x keer in de zoveel seconden. Vanuit twee punten op het plafond kan een locatie(coordinaat) en een orientatie (de hoek tov de x-as) worden berekend(picam).
   if (Serial.available()){

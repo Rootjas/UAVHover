@@ -1,6 +1,6 @@
 #include "MPU9250.h"
 #include "math.h"
-
+#include "Ultrasonic.h"
 
 MPU9250 IMU(Wire,0x68);
 int status;
@@ -52,9 +52,15 @@ float ays = 1; // accel scale factor
 
 //----------------------------------------------------------------------------------------------------//
 void setup() {
+  pinMode(12,OUTPUT);
+  pinMode(13,INPUT);
+  pinMode(3,OUTPUT);
+  pinMode(9,OUTPUT);
 
+  pinMode(5,OUTPUT);
+  pinMode(6,OUTPUT);
   Serial.begin(9600);
-  
+  pinMode(7,OUTPUT);
   //-----------------------------IMU----------------------//
   IMU_setup();
   // vanuit pi orientatie, positie en totale lengte (baan) tot volgende punt verkrijgen. (later nog een aantal keer uitvoeren zodat sensoren geeikt blijven)  HOEKEN in Radialen, AFSTANDEN in centimeters
