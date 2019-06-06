@@ -7,7 +7,7 @@ double tijdstap(){
   // Wacht tot de cyclustijd bereikt is:
   while (t_nw - t_oud < cyclustijd) t_nw = millis();
   dt = (t_nw - t_oud) * .001; // omzetten ms => s
-  Serial.print("\tDt");
-  Serial.print(dt);
+  //Serial.print("\tDt");
+  //Serial.print(dt);
   return dt;
 }

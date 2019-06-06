@@ -3,7 +3,6 @@ void loop() {
 
   //---------------------dt--------------------//
   double dt = tijdstap();
-  digitalWrite(7,OUTPUT);
 
   // Hier komt een stukje code te staan die de stroomwaarden en spanningswaarden van de lipo accu uitleest en eventueel terugkoppelt aan de hmi?
   
@@ -14,12 +13,14 @@ void loop() {
   //------------------Stroom_meter-------------//
 
   int stroom_status = stroom_monitor(stroom_status);
-
+/*
   if(spanning_status == 1 || stroom_status == 1){
     digitalWrite(7,LOW);
+    Serial.println("");
     Serial.println("ERROR ERROR");
+    Serial.println("");
   }
-  else digitalWrite(7,HIGH);
+  else*/ digitalWrite(7,HIGH);
   
   //------------------IMU----------------------//
   double Theta, Alpha, A_x, A_y, Omega, V_x, V_y, X_x, X_y;

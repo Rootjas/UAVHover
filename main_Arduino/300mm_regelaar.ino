@@ -19,7 +19,7 @@ const float aLa = -2286.2, bLa = 1234.9, aRa = -1964.7,  bRa = 1169.1; // achter
 // Houd rekening met de maximale stuwkracht voor zowel linker als rechter motor en met
 // vooruit en achteruit.
 /****************************************************************************/
-const float FmaxL = 0.3690, FmaxR = 0.3647, FminL = -0.4590, FminR = -0.4635;
+const float FmaxL = 0.1722, FmaxR = 0.1678, FminL = -0.2278, FminR = -0.2295;
 /****************************************************************************/
 
 
@@ -54,9 +54,12 @@ Ultrasonic ultrasonic(usTrigPen, usEchoPen);
 void mm300_regelaar(float dt, int &PWMLv, int &PWMLa, int &PWMRv, int &PWMRa){
   
   float s = ultrasonic.Ranging(CM);
+  if(s > 200){
+    s = 200;
+  }
 
   //P-regelaar
-  error = sp - s;
+  error = (sp - s)*0.1;
   
   //D-regelaar
   D_error = (error - error_oud) / dt;
