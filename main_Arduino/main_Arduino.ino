@@ -17,7 +17,7 @@ void loop() {
 
   if(spanning_status == 1 || stroom_status == 1){
     digitalWrite(7,LOW);
-    Serial.println("ERROR ERROR")
+    Serial.println("ERROR ERROR");
   }
   else digitalWrite(7,HIGH);
   
