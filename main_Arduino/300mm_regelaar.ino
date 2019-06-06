@@ -1,5 +1,5 @@
 #include "Ultrasonic.h"
-const float Kp = 0.025, Ki = 0., Kd = 0.01; // Regelaarparameters
+const float Kp = 0.6, Ki = 0., Kd = 1; // Regelaarparameters
 const float sp = 30;       // setpoint = 30 cm
 
 float error_oud, D_error;
