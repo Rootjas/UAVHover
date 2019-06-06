@@ -19,7 +19,7 @@ const float aLa = -2286.2, bLa = 1234.9, aRa = -1964.7,  bRa = 1169.1; // achter
 // Houd rekening met de maximale stuwkracht voor zowel linker als rechter motor en met
 // vooruit en achteruit.
 /****************************************************************************/
-const float FmaxL = 0.3690, FmaxR = 0.3647, FminL = -0.4590, FminR = -0.4635;
+const float FmaxL = 0.1772, FmaxR = 0.1678, FminL = -0.2278, FminR = -0.2295;
 /****************************************************************************/
 
 
