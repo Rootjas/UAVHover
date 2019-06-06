@@ -50,8 +50,7 @@ const int usTrigPen = 12;
 const int usEchoPen = 13;
 Ultrasonic ultrasonic(usTrigPen, usEchoPen);
 
-
-void mm300_regelaar(float dt, int &PWMLv, int &PWMLa, int &PWMRv, int &PWMRa){
+void mm300_regelaar(float dt, float V_y, int &PWMLv, int &PWMLa, int &PWMRv, int &PWMRa){
   
   float s = ultrasonic.Ranging(CM);
   if(s > 200){
@@ -78,9 +77,11 @@ void mm300_regelaar(float dt, int &PWMLv, int &PWMLa, int &PWMRv, int &PWMRa){
   }
 */
   Fclipped = max(min(F, Fmax), Fmin); // Fmin < F < +Fmax
-
-  // Omrekening Fclipped naar pwm-signaal
-  if (Fclipped > 0) {                 // Als de stuwkracht vooruit gericht is dan..
+  if(V_y>1.1){
+    void snelheidsregelaar(dt,V_y, PWMLv, PWMLa, PWMRv, PWMRa);
+  }
+  else{
+    if (Fclipped > 0) {                 // Als de stuwkracht vooruit gericht is dan..
     pwmLv = aLv * Fclipped;
     pwmRv = aRv * Fclipped;
     //pwmLa = (maxpwm / FmaxL) * Fclipped;
@@ -88,8 +89,8 @@ void mm300_regelaar(float dt, int &PWMLv, int &PWMLa, int &PWMRv, int &PWMRa){
     pwmLa = 0;
     pwmRa = 0;
     richting = true;
-
-  } else {                            // ..anders..
+  } 
+    else {                            // ..anders..
       pwmLa = -(aLa * Fclipped * Fclipped + bLa * Fclipped);
       pwmRa = -(aRa * Fclipped * Fclipped + bLa * Fclipped);
       //pwmLv = (maxpwm / FminL) * Fclipped;
@@ -98,10 +99,14 @@ void mm300_regelaar(float dt, int &PWMLv, int &PWMLa, int &PWMRv, int &PWMRa){
       pwmRv = 0;
       richting = false;
   }
+  }
+  // Omrekening Fclipped naar pwm-signaal
+  
   PWMLv = max(min(Round(pwmLv), 170), 0);
   PWMRv = max(min(Round(pwmRv), 170), 0);
   PWMLa = max(min(Round(pwmLa), 170), 0);
   PWMRa = max(min(Round(pwmRa), 170), 0);
+  
   /*Serial.print("\t\tPWMRv: ");
   Serial.print(pwmRv);
   Serial.print("\t\tPWMLv: ");

@@ -24,11 +24,16 @@ void loop() {
   
   //------------------IMU----------------------//
   double Theta, Alpha, A_x, A_y, Omega, V_x, V_y, X_x, X_y;
-  IMU_read(Theta, Omega, Alpha, A_x, A_y, V_x, V_y, X_x, X_y);
-
-
   int PWMLv, PWMLa, PWMRv, PWMRa;
-  mm300_regelaar(dt, PWMLv, PWMLa, PWMRv, PWMRa);
+  IMU_read(Theta, Omega, Alpha, A_x, A_y, V_x, V_y, X_x, X_y);
+  error_theta = setpoint_theta-theta;
+  
+  if(error_theta>30){
+    hoekregelaar(dt, Omega, Theta, PWMLv, PWMLa, PWMRv, PWMRa);
+  }
+  else{
+    mm300_regelaar(dt, V_y, PWMLv, PWMLa, PWMRv, PWMRa);
+  }
   
   analogWrite(3,PWMLv);
   analogWrite(9,PWMLa);
