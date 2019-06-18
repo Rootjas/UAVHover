@@ -74,25 +74,20 @@ void IMU_read(double &Yaw, double &gZr, double &Theta_versnelling, double &fXg, 
   /*
   Serial.print("\t\tXg"); Serial.print(Xg);
   //Serial.print(timeStep,3);
-  Serial.print("\t\t");
-  Serial.print("Yg"); Serial.print(Yg);
-  Serial.print("\t\t");
+  Serial.print("\t\tYg"); Serial.print(Yg);
+
 */
   // Print gyro values in rad/sec
-  //Serial.print("Zr"); Serial.print(IMU.getGyroZ_rads(),5);
-  Serial.print("\t\t");
+  //Serial.print("\t\tZr"); Serial.print(IMU.getGyroZ_rads(),5);
 
   // Print mag values in degree/sec
-  //Serial.print("X-m: "); Serial.print(IMU.getMagX_uT(),2);
-  //Serial.print("\t\t");
-  //Serial.print("Y-m: "); Serial.print(IMU.getMagY_uT(),2);
-  //Serial.print("\t\t");
-  //Serial.print("Z-m: "); Serial.print(IMU.getMagZ_uT(),2);
-  //Serial.print("\t\t");
+  //Serial.print("\t\tX-m: "); Serial.print(IMU.getMagX_uT(),2);
+  //Serial.print("\t\tY-m: "); Serial.print(IMU.getMagY_uT(),2);
+  //Serial.print("\t\tZ-m: "); Serial.print(IMU.getMagZ_uT(),2);
 
   Yaw = Yaw_Berekening(gZr, dt);
-  //Serial.print("Yw"); Serial.print(Yaw);
-  Serial.println("\t\t");
+  Serial.print("\t\tYw"); Serial.print(Yaw);
+
   Theta_versnelling = Alpha_Berekening(gZr, dt);
 
   Snelheid_X = Snelheid_Berekening(fXg, dt);

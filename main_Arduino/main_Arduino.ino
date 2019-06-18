@@ -1,6 +1,6 @@
 
 void loop() {
-
+  
   //---------------------dt--------------------//
   double dt = tijdstap();
 
@@ -24,21 +24,26 @@ void loop() {
   
   //------------------IMU----------------------//
   double Theta, Alpha, A_x, A_y, Omega, V_x, V_y, X_x, X_y;
+  //IMU_read(Theta, Omega, Alpha, A_x, A_y, V_x, V_y, X_x, X_y);
+
+
   int PWMLv, PWMLa, PWMRv, PWMRa;
-  IMU_read(Theta, Omega, Alpha, A_x, A_y, V_x, V_y, X_x, X_y);
-  error_theta = setpoint_theta-theta;
+  mm300_regelaar(dt, PWMLv, PWMLa, PWMRv, PWMRa);
+
+  int RPWMLv, RPWMLa, RPWMRv, RPWMRa;
+  Hoek_regelaar(dt, RPWMLv, RPWMLa, RPWMRv, RPWMRa, Theta);
+
+
+    PWMLv = (RPWMLv+PWMLv)/2;
+    PWMLa = (RPWMLa+PWMLa)/2;
+    PWMRa = (RPWMRa+PWMRa)/2;
+    PWMRv = (RPWMRv+PWMRv)/2; 
+
   
-  if(error_theta>30){
-    hoekregelaar(dt, Omega, Theta, PWMLv, PWMLa, PWMRv, PWMRa);
-  }
-  else{
-    mm300_regelaar(dt, V_y, PWMLv, PWMLa, PWMRv, PWMRa);
-  }
-  
-  analogWrite(3,PWMLv);
-  analogWrite(9,PWMLa);
-  analogWrite(5,PWMRa);  
-  analogWrite(6,PWMRv);
+  analogWrite(3,RPWMLv);
+  analogWrite(9,RPWMLa);
+  analogWrite(5,RPWMRa);  
+  analogWrite(6,RPWMRv);
   /*
   // Informatie ophalen van pi, 1x keer in de zoveel seconden. Vanuit twee punten op het plafond kan een locatie(coordinaat) en een orientatie (de hoek tov de x-as) worden berekend(picam).
   if (Serial.available()){
@@ -83,4 +88,5 @@ void loop() {
   //------------------USED FOR DEBUGGING-------------//
   printer();
   */
+  Serial.println("");
 }

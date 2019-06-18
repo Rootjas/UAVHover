@@ -5,8 +5,7 @@ int stroom_monitor(int stroom_status){
 
   float stroom_waarde = analogRead(A3) * (5.0 / 1023.0);
 
-  Serial.print("\t\tsw");
-  Serial.print(stroom_waarde, 2);
+  Serial.print("\t\tsw");Serial.print(stroom_waarde, 2);
 
   
   if(stroom_waarde > 0.7 && stroom_status == 0){
