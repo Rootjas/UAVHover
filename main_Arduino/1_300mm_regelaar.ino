@@ -1,6 +1,7 @@
 #include "Ultrasonic.h"
-const float Kp = 0.025, Ki = 0., Kd = 0.01; // Regelaarparameters
+const float Kp = 0.025, Ki = 0., Kd = 0.025; // Regelaarparameters
 const float sp = 30;       // setpoint = 30 cm
+float s_oud;
 
 float error_oud, D_error;
 float I_error = 0;
@@ -28,6 +29,16 @@ float F, Fclipped;
 
 int maxpwm = 170;
 
+void snelheidsregelaar(float dt, float V_y, int &PWMLa, int &PWMRa){
+  if(V_y > 1.1){
+    if(PWMLa > 0){
+      PWMLa = 0.;
+    }
+    if(PWMRa > 0){
+      PWMRa = 0.;
+    }
+  }
+}
 
 int Round(float myfloat)
 {
@@ -42,13 +53,16 @@ int Round(float myfloat)
   return (int)integral;
 }
 
-void mm300_regelaar(float dt, int &PWMLv, int &PWMLa, int &PWMRv, int &PWMRa){
+void mm300_regelaar(float dt, int &PWMLv, int &PWMLa, int &PWMRv, int &PWMRa, float V_y){
   
   float s = ultrasonic.Ranging(CM);
+  
   if(s > 200){
     s = 200;
   }
-
+  if((s - s_oud) > 50) s = s_oud;
+  
+  s_oud = s;
   //P-regelaar
   error = (sp - s)*0.1;
   
@@ -89,11 +103,14 @@ void mm300_regelaar(float dt, int &PWMLv, int &PWMLa, int &PWMRv, int &PWMRa){
       pwmRv = 0;
       richting = false;
   }
-  
+
+  snelheidsregelaar(dt, V_y, PWMLa,PWMRa);
   PWMLv = max(min(Round(pwmLv), 170), 0);
   PWMRv = max(min(Round(pwmRv), 170), 0);
   PWMLa = max(min(Round(pwmLa), 170), 0);
   PWMRa = max(min(Round(pwmRa), 170), 0);
+
+  
   /*Serial.print("\t\tPWMRv: ");
   Serial.print(pwmRv);
   Serial.print("\t\tPWMLv: ");

@@ -24,26 +24,32 @@ void loop() {
   
   //------------------IMU----------------------//
   double Theta, Alpha, A_x, A_y, Omega, V_x, V_y, X_x, X_y;
-  //IMU_read(Theta, Omega, Alpha, A_x, A_y, V_x, V_y, X_x, X_y);
+  IMU_read(Theta, Omega, Alpha, A_x, A_y, V_x, V_y, X_x, X_y);
 
 
   int PWMLv, PWMLa, PWMRv, PWMRa;
-  mm300_regelaar(dt, PWMLv, PWMLa, PWMRv, PWMRa);
+  mm300_regelaar(dt, PWMLv, PWMLa, PWMRv, PWMRa, V_y);
 
   int RPWMLv, RPWMLa, RPWMRv, RPWMRa;
   Hoek_regelaar(dt, RPWMLv, RPWMLa, RPWMRv, RPWMRa, Theta);
 
-
-    PWMLv = (RPWMLv+PWMLv)/2;
-    PWMLa = (RPWMLa+PWMLa)/2;
-    PWMRa = (RPWMRa+PWMRa)/2;
-    PWMRv = (RPWMRv+PWMRv)/2; 
+  float weight = 0;
+  
+  int tot_PWMLv = Round(RPWMLv * weight + PWMLv * (1.0 - weight));
+  int tot_PWMLa = Round(RPWMLa * weight + PWMLa * (1.0 - weight));
+  int tot_PWMRa = Round(RPWMRa * weight + PWMRa * (1.0 - weight));
+  int tot_PWMRv = Round(RPWMRv * weight + PWMRv * (1.0 - weight)); 
 
   
-  analogWrite(3,RPWMLv);
+  /*analogWrite(3,RPWMLv);
   analogWrite(9,RPWMLa);
   analogWrite(5,RPWMRa);  
-  analogWrite(6,RPWMRv);
+  analogWrite(6,RPWMRv);*/
+  analogWrite(3,tot_PWMLv);
+  analogWrite(9,tot_PWMLa);
+  analogWrite(5,tot_PWMRa);  
+  analogWrite(6,tot_PWMRv);
+  //Serial.print("\t\tPWM");Serial.print(tot_PWMLv);
   /*
   // Informatie ophalen van pi, 1x keer in de zoveel seconden. Vanuit twee punten op het plafond kan een locatie(coordinaat) en een orientatie (de hoek tov de x-as) worden berekend(picam).
   if (Serial.available()){

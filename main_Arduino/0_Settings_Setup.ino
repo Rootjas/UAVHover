@@ -76,6 +76,6 @@ void setup() {
 
   
   //-----------------------------IMU----------------------//
-  //IMU_setup();
+  IMU_setup();
   // vanuit pi orientatie, positie en totale lengte (baan) tot volgende punt verkrijgen. (later nog een aantal keer uitvoeren zodat sensoren geeikt blijven)  HOEKEN in Radialen, AFSTANDEN in centimeters
 }
