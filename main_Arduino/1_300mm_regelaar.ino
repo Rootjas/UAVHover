@@ -1,5 +1,5 @@
 #include "Ultrasonic.h"
-const float Kp = 0.025, Ki = 0., Kd = 0.025; // Regelaarparameters
+const float Kp = 0.05, Ki = 0., Kd = 0.025; // Regelaarparameters
 const float sp = 30;       // setpoint = 30 cm
 float s_oud;
 
@@ -14,8 +14,8 @@ bool richting;
 
 Ultrasonic ultrasonic(usVoorTrig, usVoorEcho);
     
-const float aLv = 993.44, aRv = 1007.9; // vooruit bewegend lineair
-const float aLa = -2286.2, bLa = 1234.9, aRa = -1964.7,  bRa = 1169.1; // achteruit bewegend polynoom
+const float aLv = 993.44, aRv = 1007.9;                                 // vooruit bewegend lineair
+const float aLa = -2286.2, bLa = 1234.9, aRa = -1964.7,  bRa = 1169.1;  // achteruit bewegend polynoom
 /****************************************************************************/
 // Houd rekening met de maximale stuwkracht voor zowel linker als rechter motor en met
 // vooruit en achteruit.
@@ -53,9 +53,9 @@ int Round(float myfloat)
   return (int)integral;
 }
 
-void mm300_regelaar(float dt, int &PWMLv, int &PWMLa, int &PWMRv, int &PWMRa, float V_y){
-  
-  float s = ultrasonic.Ranging(CM);
+void mm300_regelaar(float dt, int &PWMLv, int &PWMLa, int &PWMRv, int &PWMRa, float V_y, float s, float sp, bool us){
+
+  if(us == 1) s = ultrasonic.Ranging(CM);
   
   if(s > 200){
     s = 200;

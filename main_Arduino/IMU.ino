@@ -31,7 +31,7 @@ void IMU_setup(){
 double Yaw_Berekening(double Gyro_z, double dt){
   
   //Yaw is theta begin, theta wordt gebruikt als eindhoek
-  Yaw = Yaw + ((Gyro_z) * dt * 180)/M_PI;
+  Yaw = Yaw + ((Gyro_z) * dt * 180 * 2)/(M_PI);
   return Yaw;
 }
 
@@ -71,12 +71,12 @@ void IMU_read(double &Yaw, double &gZr, double &Theta_versnelling, double &fXg, 
   fZg = Zg * alpha + (fZg * (1.0 - alpha));
   gZr = Zr * alpha + (gZr * (1.0 - alpha));
 
-  /*
+  
   Serial.print("\t\tXg"); Serial.print(Xg);
   //Serial.print(timeStep,3);
   Serial.print("\t\tYg"); Serial.print(Yg);
 
-*/
+
   // Print gyro values in rad/sec
   //Serial.print("\t\tZr"); Serial.print(IMU.getGyroZ_rads(),5);
 
@@ -94,5 +94,6 @@ void IMU_read(double &Yaw, double &gZr, double &Theta_versnelling, double &fXg, 
   Plaats_X = Plaats_Berekening(Snelheid_X, dt);
   Snelheid_Y = Snelheid_Berekening(fYg, dt);
   Plaats_Y = Plaats_Berekening(Snelheid_Y, dt);
+  Serial.print("\t\tY_x: ");Serial.print(Plaats_Y);
   
 }

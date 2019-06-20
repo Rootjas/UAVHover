@@ -22,7 +22,7 @@ double Snelheid = 0;
 
 //Regelaarparameters roterend
 const float hKp = 3., hKd = 5.;//Regelaarparameters
-float ohmega = 0.0, theta = 0;
+float omega = 0.0, theta = 0;
 const float hsp = 0.00;
 
 

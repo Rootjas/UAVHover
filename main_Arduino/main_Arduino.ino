@@ -1,10 +1,7 @@
-
 void loop() {
   
   //---------------------dt--------------------//
   double dt = tijdstap();
-
-  // Hier komt een stukje code te staan die de stroomwaarden en spanningswaarden van de lipo accu uitleest en eventueel terugkoppelt aan de hmi?
   
   //------------------Cel_monitor--------------//
 
@@ -14,7 +11,7 @@ void loop() {
 
   int stroom_status = stroom_monitor(stroom_status);
 /*
-  if(spanning_status == 1 || stroom_status == 1){
+  if(spanning_status == 1){
     digitalWrite(7,LOW);
     Serial.println("");
     Serial.println("ERROR ERROR");
@@ -22,77 +19,57 @@ void loop() {
   }
   else*/ digitalWrite(7,HIGH);
   
+  //-----------------Serial-------------------//
+  bool newData;
+  char receivedChars[32], tempChars[32]; 
+  float sp, Hoek_sp; 
+  int event;
+  recvWithStartEndMarkers(newData, receivedChars, tempChars);
+  
+  if (newData == true) {
+    strcpy(tempChars, receivedChars);
+    parseData(sp, Hoek_sp, event, tempChars);
+    newData = false;
+    Serial.print("\t\tPC: ");Serial.print(sp);Serial.print(",");Serial.print(Hoek_sp);Serial.print(",");Serial.print(event);
+  }
+ 
   //------------------IMU----------------------//
   double Theta, Alpha, A_x, A_y, Omega, V_x, V_y, X_x, X_y;
   IMU_read(Theta, Omega, Alpha, A_x, A_y, V_x, V_y, X_x, X_y);
-
-
+    
+  //-----------------300mm regelaar-----------//
+  sp = 30;                        //VOOR TESTEN sp = 30;
   int PWMLv, PWMLa, PWMRv, PWMRa;
-  mm300_regelaar(dt, PWMLv, PWMLa, PWMRv, PWMRa, V_y);
-
-  int RPWMLv, RPWMLa, RPWMRv, RPWMRa;
-  Hoek_regelaar(dt, RPWMLv, RPWMLa, RPWMRv, RPWMRa, Theta);
-
-  float weight = 0;
+  mm300_regelaar(dt, PWMLv, PWMLa, PWMRv, PWMRa, V_y, X_y, sp, 1);
   
-  int tot_PWMLv = Round(RPWMLv * weight + PWMLv * (1.0 - weight));
-  int tot_PWMLa = Round(RPWMLa * weight + PWMLa * (1.0 - weight));
-  int tot_PWMRa = Round(RPWMRa * weight + PWMRa * (1.0 - weight));
-  int tot_PWMRv = Round(RPWMRv * weight + PWMRv * (1.0 - weight)); 
+  //-----------------hoek regelaar--------------//
+  Hoek_sp = 0;                    //VOOR TESTEN Hoek_sp = 0;
+  int R_PWMLv, R_PWMLa, R_PWMRv, R_PWMRa;
+  Hoek_regelaar(dt, R_PWMLv, R_PWMLa, R_PWMRv, R_PWMRa, Theta, Hoek_sp);
 
-  
-  /*analogWrite(3,RPWMLv);
-  analogWrite(9,RPWMLa);
-  analogWrite(5,RPWMRa);  
-  analogWrite(6,RPWMRv);*/
+  //----------------wand regelaar -------------//  
+  int H_PWMLv, H_PWMLa, H_PWMRv, H_PWMRa;
+  Wand_volger(dt, H_PWMLv, H_PWMLa, H_PWMRv, H_PWMRa);
+  analogWrite(3,H_PWMLv);
+  analogWrite(9,H_PWMLa);
+  analogWrite(5,H_PWMRa);  
+  analogWrite(6,H_PWMRv);
+
+  //------------------coordinaten regelaar---------------//
+  event = 1;
+  coordinaten_regelaar(dt, PWMLv, PWMLa, PWMRv, PWMRa, V_y, X_y, X_x, sp, Hoek_sp, event, Theta);
+
+
+  //--------------------PWM voor 300 en hoek-------------//
+  float weight = 0.3;
+  int tot_PWMLv = Round(R_PWMLv * weight + PWMLv * (1.0 - weight));
+  int tot_PWMLa = Round(R_PWMLa * weight + PWMLa * (1.0 - weight));
+  int tot_PWMRa = Round(R_PWMRa * weight + PWMRa * (1.0 - weight));
+  int tot_PWMRv = Round(R_PWMRv * weight + PWMRv * (1.0 - weight)); 
   analogWrite(3,tot_PWMLv);
   analogWrite(9,tot_PWMLa);
   analogWrite(5,tot_PWMRa);  
   analogWrite(6,tot_PWMRv);
-  //Serial.print("\t\tPWM");Serial.print(tot_PWMLv);
-  /*
-  // Informatie ophalen van pi, 1x keer in de zoveel seconden. Vanuit twee punten op het plafond kan een locatie(coordinaat) en een orientatie (de hoek tov de x-as) worden berekend(picam).
-  if (Serial.available()){
-    r = r * (Serial.read() - '0');
-    Serial.println(r);
-  }
 
-  // Hier komt een stukje code van de afstandssensoren en hun regelaar(bij het detecteren van object binnen 0,3 cm ga de andere kant op accelereren/ kom tot stilstand)
-
-
-
-  // regelsysteem input is de hoek of stand {radialen], dit vergelijk je met het setpoint gewenste hoek = 0[radialen]. Output is moment Mclipped
-  herror_oud = herror;
-  herror = hsp - theta;                           //setpoint sp word van te voren bepaald door picam dit is dus de totale lengte vd baan, de error is het verschil tussen sp en dead reckonde waarde theta 
-  hd_error = herror - herror_oud;                 //de hd_error is het verschil tussen nieuw en oude error waarde die nodig is voor d -regelaar
-  M = herror * hKp + hd_error / dt * hKd;         // de waarden voor hkp en hkd moeten we nog berekenen
-  Mclipped = max(min(M, Mmax),-Mmax);             // -Mmax < M < +Mmax moment wordt begrenst om stabiliteit ten goede te komen +=rechtsom en -=linksom
-
-  // hier moet een stukje code komen te staan die theta gelijk trekt met picam (kalibratie)
-  // bijv: na 5 keer het bepalen van theta met behulp van het uitlezen van imu, bepalen we 1x theta met de picam.
-  // De s die door de picam wordt gegeneerd is de kalibratie om ruisoptelling te voorkomen.
-
-  // hier moet een stukje code komen te staan die het moment Mclipped omzet naar een pwm signaal naar motor 1 of 2 vooruit of achteruit
-
-
- 
-
-  // hier moet een stukje code komen te staan die s gelijk trekt met picam (kalibratie)
-  // bijv: na 5 keer het bepalen van s met behulp van het uitlezen van imu, bepalen we 1x s met de picam.
-  // De s die door de picam wordt gegeneerd is de kalibratie om ruisoptelling te voorkomen.
-
-  // regelsysteem input is de al afgelegde weg s {CM], dit vergelijk je met het setpoint totaal af te leggen weg[CM]. Output is kracht Fclipped
-  error_oud = error;
-  error = sp - s;                             //setpoint sp word van te voren bepaald door picam dit is dus de totale lengte vd baan, de error is het verschil tussen sp en dead reckonde waarde s 
-  d_error = error - error_oud;                //de d_error is het verschil tussen nieuw en oude error waarde die nodig is voor d -regelaar
-  F = error * Kp + d_error / dt * Kd;         // de waarden voor kp en kd moeten we nog berekenen
-  Fclipped = max(min(F, Fmax),-Fmax);         // -Fmax < F < +Fmax kracht wordt begrenst om stabiliteit ten goede te komen
-  
-  // omrekenen van kracht naar pwm signaal voor beide motoren, we gaan hiervan uit dat orientatie al voldoende is.
-
-
-  //------------------USED FOR DEBUGGING-------------//
-  printer();
-  */
   Serial.println("");
 }

@@ -1,7 +1,7 @@
 const float arm = 0.138; 
 
-const float Hoek_Kp = 0.025, Hoek_Ki = 0., Hoek_Kd = 0.02; // Regelaarparameters
-const float Theta_sp = 0;
+const float Hoek_Kp = 0.025, Hoek_Ki = 0.01, Hoek_Kd = 0.03; // Regelaarparameters
+
 float Hoek_error_oud;
 float Theta_oud;
 float M, Mclipped;
@@ -9,7 +9,7 @@ float Hoek_Alpha;
 const float Iz = 0.01955054;
 const float massa = 544.5;
 
-float Hoek_transfer(float dt, int Theta){
+float Hoek_Transfer(float dt, int Theta, float Theta_sp){
   //P-regelaar
   float Hoek_error = Theta_sp - Theta;
 
@@ -32,34 +32,23 @@ float Hoek_transfer(float dt, int Theta){
   return Theta_Hoek;
 }
 
-float Hoek_Transfer_Function(float dt, float Theta){
-  
-  float F_clipped_Hoek_teller = Hoek_transfer(dt, Theta);
 
-//  float F_clipped_Hoek_noemer = Hoek_transfer(dt, Theta) + 1;
-//  
-//  float F_clipped_Hoek = F_clipped_Hoek_teller / F_clipped_Hoek_noemer;
+void Hoek_regelaar(float dt, int &PWMLv, int &PWMLa, int &PWMRv, int &PWMRa, double &Theta, float Hoek_sp){
 
-  //return F_clipped_Hoek;
-  return F_clipped_Hoek_teller;
-}
-
-void Hoek_regelaar(float dt, int &PWMLv, int &PWMLa, int &PWMRv, int &PWMRa, double &Theta){
-
-  float F_clipped_Hoek = Hoek_Transfer_Function(dt, Theta);
+  float F_clipped_Hoek = Hoek_Transfer(dt, Theta, Hoek_sp);
   
   float Fclipped_Hoek = max(min(F_clipped_Hoek, Fmax), Fmin);
   
   if (Fclipped_Hoek > 0) {      
     
-    pwmLv = aLv * Fclipped_Hoek-20;
+    pwmLv = aLv * Fclipped_Hoek;
     pwmRa = aRv * Fclipped_Hoek;
     pwmLa = 0;
     pwmRv = 0;
     richting = true;
 
   } else {                            // ..anders..
-      pwmLa = -(aLa * Fclipped_Hoek * Fclipped_Hoek + bLa * Fclipped_Hoek)-20;
+      pwmLa = -(aLa * Fclipped_Hoek * Fclipped_Hoek + bLa * Fclipped_Hoek);
       pwmRv = -(aRa * Fclipped_Hoek * Fclipped_Hoek + bLa * Fclipped_Hoek);
       //pwmLv = (maxpwm / FminL) * Fclipped;
       //pwmRv = (maxpwm / FminR) * Fclipped;
