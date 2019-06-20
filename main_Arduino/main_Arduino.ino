@@ -38,9 +38,9 @@ void loop() {
   IMU_read(Theta, Omega, Alpha, A_x, A_y, V_x, V_y, X_x, X_y);
     
   //-----------------300mm regelaar-----------//
-  sp = 30;                        //VOOR TESTEN sp = 30;
+  //sp = 30;                        //VOOR TESTEN sp = 30;
   int PWMLv, PWMLa, PWMRv, PWMRa;
-  mm300_regelaar(dt, PWMLv, PWMLa, PWMRv, PWMRa, V_y, X_y, sp, 1);
+  //mm300_regelaar(dt, PWMLv, PWMLa, PWMRv, PWMRa, V_y, X_y, sp, 1);
   
   //-----------------hoek regelaar--------------//
   Hoek_sp = 0;                    //VOOR TESTEN Hoek_sp = 0;
@@ -49,14 +49,15 @@ void loop() {
 
   //----------------wand regelaar -------------//  
   int H_PWMLv, H_PWMLa, H_PWMRv, H_PWMRa;
-  Wand_volger(dt, H_PWMLv, H_PWMLa, H_PWMRv, H_PWMRa);
-  analogWrite(3,H_PWMLv);
-  analogWrite(9,H_PWMLa);
-  analogWrite(5,H_PWMRa);  
-  analogWrite(6,H_PWMRv);
+//  Wand_volger(dt, H_PWMLv, H_PWMLa, H_PWMRv, H_PWMRa);
+//  analogWrite(3,H_PWMLv);
+//  analogWrite(9,H_PWMLa);
+//  analogWrite(5,H_PWMRa);  
+//  analogWrite(6,H_PWMRv);
 
   //------------------coordinaten regelaar---------------//
   event = 1;
+  sp = 30;
   coordinaten_regelaar(dt, PWMLv, PWMLa, PWMRv, PWMRa, V_y, X_y, X_x, sp, Hoek_sp, event, Theta);
 
 

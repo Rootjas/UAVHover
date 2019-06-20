@@ -24,6 +24,7 @@ void coordinaten_regelaar(float dt, int &PWMLv, int &PWMLa, int &PWMRv, int &PWM
       int PWMRv = Round(R_PWMRv * weight1 + PWMRv * (1.0 - weight1)); 
       break;*/
   case 3:
+      Wand_volger(dt, H_PWMLv, H_PWMLa, H_PWMRv, H_PWMRa);
       break;
   }
 }
